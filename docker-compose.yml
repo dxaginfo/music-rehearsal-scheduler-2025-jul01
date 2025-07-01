@@ -1,0 +1,27 @@
+version: '3'
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: rehearsal
+    ports:
+      - "5432:5432"
+  backend:
+    build: ./backend
+    command: node index.js
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    command: npm start
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - "3000:3000"
